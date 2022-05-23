@@ -12,17 +12,60 @@
     />
     <title>{{template "title" .}}
     - Timefy</title>
+
+    <link rel="stylesheet" href="website/vendors/feather/feather.css" />
+    <link rel="stylesheet" href="website/vendors/mdi/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="website/vendors/ti-icons/css/themify-icons.css" />
+    <link rel="stylesheet" href="website/vendors/typicons/typicons.css" />
+    <link
+      rel="stylesheet"
+      href="website/vendors/simple-line-icons/css/simple-line-icons.css"
+    />
+    <link rel="stylesheet" href="website/vendors/css/vendor.bundle.base.css" />
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link
+      rel="stylesheet"
+      href="website/vendors/datatables.net-bs4/dataTables.bootstrap4.css"
+    />
+    <link rel="stylesheet" href="website/js/select.dataTables.min.css" />
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="website/css/vertical-layout-light/style.css" />
+    <!-- endinject -->
+    <link rel="shortcut icon" href="website/images/favicon.png" />
     {{template "header" .}}
 </head>
 <body>
     {{template "main" .}}
 
 
-  <div class="fixed-bottom">
-    <div class="container">
-      {{template "footer" .}}
-    </div>
-  </div>
+  
+<footer class="footer fixed-bottom">
+            <div
+              class="
+                d-sm-flex
+                justify-content-center justify-content-sm-between
+              "
+            >
+              <span
+                class="
+                  text-muted text-center text-sm-left
+                  d-block d-sm-inline-block
+                "
+                >Timefy</span
+              >
+              <span
+                class="
+                  float-none float-sm-right
+                  d-block
+                  mt-1 mt-sm-0
+                  text-center
+                "
+                >Copyright © 2022. All rights reserved.</span
+              >
+            </div>
+</footer>
 </body>
 
   {{template "scripts" .}}
