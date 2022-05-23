@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>Timefy Adminpanel</title>
-    <!-- plugins:css -->
+{{template "base" .}}
+{{define "header"}}
+
     <link rel="stylesheet" href="website/vendors/feather/feather.css" />
     <link rel="stylesheet" href="website/vendors/mdi/css/materialdesignicons.min.css" />
     <link rel="stylesheet" href="website/vendors/ti-icons/css/themify-icons.css" />
@@ -30,9 +22,13 @@
     <link rel="stylesheet" href="website/css/vertical-layout-light/style.css" />
     <!-- endinject -->
     <link rel="shortcut icon" href="website/images/favicon.png" />
-  </head>
+{{end}}
 
-  <body>
+{{define "title"}}
+  Adminpanel
+{{end}}
+
+{{define "main"}}
     <div class="container-scroller">
       <!-- partial:partials/_navbar.html -->
       <nav
@@ -159,24 +155,22 @@
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        <tr
-                                          data-bs-toggle="collapse"
-                                          data-bs-target=".report1"
-                                        >
-                                          <td>1</td>
+                                      {{range $i, $e := .}}
+                                        <tr data-bs-toggle="collapse" data-bs-target=".{{.ID}}">
+                                          <td>{{$i}}</td>
                                           <td>
                                             <div class="d-flex">
                                               <div>
-                                                <h6>Abdullah#123</h6>
-                                                <p>Abdullah Yildirim</p>
+                                                <h6>{{.ReportedUserId}}</h6>
+                                                <p>{{.FirstName}} {{.LastName}}</p>
                                               </div>
                                             </div>
                                           </td>
                                           <td>
-                                            <p>21.05.2022</p>
+                                            <p>{{.ReportDate}}</p>
                                           </td>
                                         </tr>
-                                        <tr class="collapse report1">
+                                        <tr class="collapse {{.ID}}">
                                           <td></td>
                                           <td colspan="2">
                                             <div class="card">
@@ -186,10 +180,10 @@
 
                                               <div class="card-body">
                                                 <h5 class="card-title">
-                                                  Event title
+                                                  {{.Title}}
                                                 </h5>
                                                 <p class="card-text">
-                                                  Event description
+                                                  {{.Description}}
                                                 </p>
                                                 <br />
                                                 <p class="card-text">
@@ -218,34 +212,7 @@
                                             </div>
                                           </td>
                                         </tr>
-                                        <tr>
-                                          <td>2</td>
-                                          <td>
-                                            <div class="d-flex">
-                                              <div>
-                                                <h6>Talip#124</h6>
-                                                <p>Talip Göksu</p>
-                                              </div>
-                                            </div>
-                                          </td>
-                                          <td>
-                                            <p>19.05.2022</p>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td>3</td>
-                                          <td>
-                                            <div class="d-flex">
-                                              <div>
-                                                <h6>Obama#124</h6>
-                                                <p>Barrack Obama</p>
-                                              </div>
-                                            </div>
-                                          </td>
-                                          <td>
-                                            <p>10.05.2022</p>
-                                          </td>
-                                        </tr>
+                                        {{end}}
                                       </tbody>
                                     </table>
                                   </div>
@@ -393,32 +360,6 @@
             </div>
           </div>
           <!-- content-wrapper ends -->
-          <!-- partial:partials/_footer.html -->
-          <footer class="footer">
-            <div
-              class="
-                d-sm-flex
-                justify-content-center justify-content-sm-between
-              "
-            >
-              <span
-                class="
-                  text-muted text-center text-sm-left
-                  d-block d-sm-inline-block
-                "
-                >Timefy Adminpanel</span
-              >
-              <span
-                class="
-                  float-none float-sm-right
-                  d-block
-                  mt-1 mt-sm-0
-                  text-center
-                "
-                >Copyright © 2022. All rights reserved.</span
-              >
-            </div>
-          </footer>
           <!-- partial -->
         </div>
         <!-- main-panel ends -->
@@ -426,6 +367,9 @@
       <!-- page-body-wrapper ends -->
     </div>
     <!-- container-scroller -->
+{{end}}
+
+{{define "scripts"}}
 
     <!-- plugins:js -->
     <script src="website/vendors/js/vendor.bundle.base.js"></script>
@@ -448,5 +392,5 @@
     <script src="website/js/dashboard.js"></script>
     <script src="website/js/Chart.roundedBarCharts.js"></script>
     <!-- End custom js for this page-->
-  </body>
-</html>
+
+{{end}}

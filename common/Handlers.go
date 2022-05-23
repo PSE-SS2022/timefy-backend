@@ -1,18 +1,18 @@
 package common
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
-	"timefy-backend/models"
+	"timefy-backend/repos"
 )
 
-type TemplateStruct struct {
-	Reports []models.Report
-}
-
 func HomePageHandler(response http.ResponseWriter, request *http.Request) {
-	t, _ := template.ParseFiles("website/index.html")
-	t.Execute(response, nil)
+	t, err := template.ParseFiles("website/index.gohtml", "website/base.tmpl", "website/footer.tmpl")
+	if err != nil {
+		fmt.Println(err)
+	}
+	t.Execute(response, repos.GetReports())
 }
 
 func LoginPageHandler(response http.ResponseWriter, request *http.Request) {

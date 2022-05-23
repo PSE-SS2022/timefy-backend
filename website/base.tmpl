@@ -1,0 +1,31 @@
+{{define "base"}}
+
+<!doctype html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>{{template "title" .}}
+    - Timefy</title>
+    {{template "header" .}}
+</head>
+<body>
+    {{template "main" .}}
+
+
+  <div class="fixed-bottom">
+    <div class="container">
+      {{template "footer" .}}
+    </div>
+  </div>
+</body>
+
+  {{template "scripts" .}}
+</html>
+
+{{end}}

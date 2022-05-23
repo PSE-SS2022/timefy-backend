@@ -21393,6 +21393,7 @@ code {
   line-height: 1;
   font-weight: 400;
   border-radius: 5px;
+  white-space: normal;
   /* Buttons with only icons */
   /* Buttons with icon and text */
 }
