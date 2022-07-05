@@ -1,6 +1,9 @@
 package helpers
 
-import "io/ioutil"
+import (
+	"io/ioutil"
+	"path/filepath"
+)
 
 // Function for helping loading files (especially used for loading html files)
 
@@ -15,4 +18,8 @@ func LoadFile(fileName string) (string, error) {
 // Function for deciding if given data is empty
 func IsEmpty(data string) bool {
 	return len(data) == 0
+}
+
+func JoinPaths(paths ...string) string {
+	return filepath.Join(paths...)
 }
