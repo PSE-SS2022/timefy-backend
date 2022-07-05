@@ -16,7 +16,7 @@ type User struct {
 	LastName       string             `bson:"LastName" json:"LastName"`
 	Email          string             `bson:"Email" json:"Email"`
 	Tags           []Tag              `bson:"Tags" json:"Tags"`
-	Roles          []string           `bson:"Roles" json:"Roles"`
+	Roles          map[string]string  `bson:"Roles" json:"Roles"`
 	AmountWarnings int                `bson:"AmountWarnings" json:"AmountWarnings"`
 }
 
