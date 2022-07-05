@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
-	"timefy-backend/src/models"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -32,12 +30,12 @@ func InitDB() error {
 	return nil
 }
 
-func getDb(dbname string) *mongo.Database {
-	return dbclient.Database(dbname)
+func GetDb() *mongo.Database {
+	return dbclient.Database("timefy")
 }
 
-func DbExists(id string) bool {
-	return getDb(id) != nil
+func GetCollection(collection string) *mongo.Collection {
+	return GetDb().Collection(collection)
 }
 
 // returns date in following format: 23-05-2022
@@ -45,15 +43,4 @@ func GetCurrentDate() string {
 	currentTime := time.Now()
 	month := fmt.Sprintf("%02d", int(currentTime.Month()))
 	return strconv.Itoa(currentTime.Day()) + "-" + month + "-" + strconv.Itoa(currentTime.Year())
-}
-
-func GetReports() []models.ExtendedReport {
-	return demoReports
-}
-
-// TODO: need to add something in front of id as id may not start with an number --> jquery error
-var demoReports = []models.ExtendedReport{
-	models.ExtendedReport{"i" + primitive.NewObjectID().Hex(), "Abdullah#123", "Abdullah", "Yildirim", "21.05.2022", "1", "Mittagessen", "Hier treffen wir uns zum Mittagessen in der Mensa"},
-	models.ExtendedReport{"i" + primitive.NewObjectID().Hex(), "Talip#124", "Talip", "Göksu", "19.05.2022", "2", "Fußball", "Hi, wer hat Lust auf Fußball"},
-	models.ExtendedReport{"i" + primitive.NewObjectID().Hex(), "Barrack#125", "Barrack", "Obama", "10.05.2022", "3", "Murriicaa", "Murriicaaaaaa"},
 }
