@@ -4,11 +4,9 @@
 go
 
 ## Installation guide
-clone this repo
+`git clone https://github.com/PSE-SS2022/timefy-backend.git`
 
-go to directory
-cd src/
-``
+`cd src/`
 
 `go init .`
 
