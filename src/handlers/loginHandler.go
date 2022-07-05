@@ -1,4 +1,4 @@
-package common
+package handlers
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 )
 
 func HomePageHandler(response http.ResponseWriter, request *http.Request) {
-	t, err := template.ParseFiles("website/index.gohtml", "website/base.tmpl")
+	t, err := template.ParseFiles("website/templates/index.gohtml", "website/templates/base.tmpl")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -16,6 +16,6 @@ func HomePageHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func LoginPageHandler(response http.ResponseWriter, request *http.Request) {
-	t, _ := template.ParseFiles("website/login.gohtml", "website/base.tmpl")
+	t, _ := template.ParseFiles("website/templates/login.gohtml", "website/templates/base.tmpl")
 	t.Execute(response, nil)
 }
