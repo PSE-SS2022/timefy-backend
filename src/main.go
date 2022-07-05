@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"timefy-backend/common"
@@ -12,6 +13,7 @@ var router = mux.NewRouter()
 
 // Functions for handling pagecalls like localhost:8080/login
 func main() {
+	fmt.Println("Starting up Server")
 	/*if err := repos.InitDB(); err != nil {
 		log.Fatal("Error initializing the Database, error:" + err.Error())
 		return
