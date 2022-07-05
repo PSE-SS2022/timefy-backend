@@ -7,6 +7,8 @@ go
 clone this repo
 
 go to directory
+cd src/
+``
 
 `go init .`
 
