@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"timefy-backend/src/repos"
+
+	"src/repos"
 )
 
 func HomePageHandler(response http.ResponseWriter, request *http.Request) {

@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"strconv"
 	"time"
-	"timefy-backend/src/models"
+
+	"github.com/PSE-SS2022/timefy-backend/src/models"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

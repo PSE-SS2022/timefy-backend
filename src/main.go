@@ -3,7 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
-	"timefy-backend/src/handlers"
+
+	"github.com/PSE-SS2022/timefy-backend/src/handlers"
 
 	"github.com/gorilla/mux"
 )
@@ -18,9 +19,11 @@ func main() {
 	}*/
 	fs := http.FileServer(http.Dir("website"))
 	http.Handle("/website/", http.StripPrefix("/website/", fs))
+
 	http.Handle("/", router)
 	router.HandleFunc("/", handlers.HomePageHandler)
 	router.HandleFunc("/login", handlers.LoginPageHandler)
+
 	log.Println("All handlers set and ready to listen")
 	http.ListenAndServe(":80", nil)
 }
