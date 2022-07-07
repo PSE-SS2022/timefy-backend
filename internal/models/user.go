@@ -27,6 +27,11 @@ const (
 	InviteGroupRequest
 )
 
+type Invite struct {
+	Id   string
+	Type InviteType
+}
+
 type User struct {
 	ID                 primitive.ObjectID                   `bson:"_id,omitempty"`
 	UID                string                               `bson:"UID" json:"UID"`
@@ -40,7 +45,7 @@ type User struct {
 	ScheduledEvents    []ScheduledEvent                     `bson:"ScheduledEvents" json:"ScheduledEvents"`
 	LimitedOperations  map[LimitedOperationType][]time.Time `bson:"LimitedOperations" json:"LimitedOperations"`
 	BlockedUsers       []string                             `bson:"BlockedUsers" json:"BlockedUsers"`
-	//Invites []
+	Invites            []Invite                             `bson:"Invites" json:"Invites"`
 }
 
 func GetUserByID(id string) (User, bool) {
@@ -106,7 +111,7 @@ type FriendRelation struct {
 type UserRelation int
 
 const (
-	Friends UserRelation = iota
-	Blocked
-	NotFriends
+	UserRelationFriends UserRelation = iota
+	UserRelationBlocked
+	UserRelationNotFriends
 )
