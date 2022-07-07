@@ -38,7 +38,7 @@ type User struct {
 	FirstName          string                               `bson:"FirstName" json:"FirstName"`
 	LastName           string                               `bson:"LastName" json:"LastName"`
 	Email              string                               `bson:"Email" json:"Email"`
-	Roles              []string                             `bson:"Roles" json:"Roles"` // ?
+	Roles              map[string]string                    `bson:"Roles" json:"Roles"`
 	AmountWarnings     int                                  `bson:"AmountWarnings" json:"AmountWarnings"`
 	BannedUntil        time.Time                            `bson:"BannedUntil" json:"BannedUntil"`
 	NotificationTokens []string                             `bson:"NotificationTokens" json:"NotificationTokens"`
