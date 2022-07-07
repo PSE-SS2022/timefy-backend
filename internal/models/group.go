@@ -22,7 +22,7 @@ type GroupRelation struct {
 type GroupRole int
 
 const (
-	Owner GroupRole = iota
-	Moderator
-	Member
+	GroupRoleOwner GroupRole = iota
+	GroupRoleModerator
+	GroupRoleMember
 )
