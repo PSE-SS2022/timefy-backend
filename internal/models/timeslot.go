@@ -7,10 +7,14 @@ type TimeSlot struct {
 	EndTime   time.Time `bson:"EndTime" json:"EndTime"`
 }
 
-func (t TimeSlot) StartToString() string {
-	return t.StartTime.GoString()
+func (timeSlot TimeSlot) StartToString() string {
+	return timeSlot.StartTime.GoString()
 }
 
-func (t TimeSlot) EndToString() string {
-	return t.StartTime.GoString()
+func (timeSlot TimeSlot) EndToString() string {
+	return timeSlot.StartTime.GoString()
+}
+
+func (timeSlot TimeSlot) Equals(compare TimeSlot) bool {
+	return (timeSlot.StartTime.Equal(compare.StartTime)) && (timeSlot.EndTime.Equal(compare.EndTime))
 }
