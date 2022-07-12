@@ -22,15 +22,33 @@ func (cronJob *CronJob) DeleteOccuredEvents() {
 }
 
 type PlanningAlgorithm interface {
-	Evaluate(attendants []EventAttendant) []TimeSlot
+	Evaluate(attendants []EventAttendant, timeSlots []TimeSlot) TimeSlot
 	Notify(eventId string)
 }
 
 type SimplePlanner struct {
 }
 
-func (planner *SimplePlanner) Evaluate(attendants []EventAttendant) []TimeSlot {
-	var result []TimeSlot
+func (planner *SimplePlanner) Evaluate(attendants []EventAttendant, timeSlots []TimeSlot) TimeSlot {
+	var result TimeSlot
+	var maxParticipants int = 0
+
+	for _, timeSlot := range timeSlots {
+
+		var currentPossibleParticipants int = 0
+
+		for _, attendant := range attendants {
+			if attendant.CanParticipate(timeSlot) {
+				currentPossibleParticipants++
+			}
+		}
+
+		if currentPossibleParticipants > maxParticipants {
+			maxParticipants = currentPossibleParticipants
+			result = timeSlot
+		}
+	}
+
 	return result
 }
 
@@ -41,8 +59,8 @@ func (planner *SimplePlanner) Notify(eventId string) {
 type ComplexPlanner struct {
 }
 
-func (planner *ComplexPlanner) Evaluate(attendants []EventAttendant) []TimeSlot {
-	var result []TimeSlot
+func (planner *ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots []TimeSlot) TimeSlot {
+	var result TimeSlot
 	return result
 }
 
