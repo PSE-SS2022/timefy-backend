@@ -86,12 +86,22 @@ const (
 )
 
 type EventAttendant struct {
-	UserId        string    `bson:"UserId" json:"UserId"`
-	PossibleTimes TimeSlot  `bson:"PossibleTimes" json:"PossibleTimes"`
-	Role          EventRole `bson:"Role" json:"Role"`
+	UserId        string     `bson:"UserId" json:"UserId"`
+	PossibleTimes []TimeSlot `bson:"PossibleTimes" json:"PossibleTimes"`
+	Role          EventRole  `bson:"Role" json:"Role"`
 }
 
 func (attendant EventAttendant) CanParticipate(slot TimeSlot) bool {
+
+	for _, possibleTime := range attendant.PossibleTimes {
+		startIsBefore := possibleTime.StartTime.Before(slot.StartTime) || possibleTime.StartTime.Equal(slot.StartTime)
+		endIsAfter := possibleTime.EndTime.After(slot.EndTime) || possibleTime.EndTime.Equal(slot.EndTime)
+		if startIsBefore && endIsAfter {
+			return true
+		}
+
+	}
+
 	return false
 }
 
