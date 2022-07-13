@@ -20,6 +20,13 @@ const (
 	UserReportLimitation
 )
 
+var LimitedOperationAmounts []int = []int{1, 1, 1, 5}
+var LimitedOperationDelay []time.Time = []time.Time{Seconds(30), Seconds(60), Seconds(300), Seconds(30)}
+
+func Seconds(seconds int) time.Time {
+	return time.Date(0, 0, 0, 0, 0, seconds, 0, time.UTC)
+}
+
 type InviteType int
 
 const (
@@ -70,20 +77,41 @@ func (user *User) SetFcmToken(fcmToken string) {
 
 }
 
-func (user User) GetResetTime(operationType LimitedOperationType) time.Duration {
-	return 0
+func (user User) GetResetTime(operationType LimitedOperationType) time.Time {
+	return LimitedOperationDelay[operationType]
 }
 
 func (user User) GetAmount(operationType LimitedOperationType) int {
-	return 0
+	return LimitedOperationAmounts[operationType]
 }
 
 func (user User) HasOperationAvailable(operationType LimitedOperationType) bool {
+	operations := user.LimitedOperations[operationType]
+	amount := user.GetAmount(operationType)
+	resetTime := user.GetResetTime(operationType)
+
+	for x := 0; x < amount; x++ {
+		timeToCompare := time.Since(operations[x])
+		if timeToCompare.Seconds() >= float64(resetTime.Second()) {
+			return true
+		}
+	}
+
 	return false
 }
 
 func (user *User) ConsumeOperation(operationType LimitedOperationType) {
+	operations := user.LimitedOperations[operationType]
+	amount := user.GetAmount(operationType)
+	resetTime := user.GetResetTime(operationType)
 
+	for x := 0; x < amount; x++ {
+		timeToCompare := time.Since(operations[x])
+		if timeToCompare.Seconds() >= float64(resetTime.Second()) {
+			operations[x] = time.Now()
+			return
+		}
+	}
 }
 
 func (user *User) HandleInvite(objectId string, inviteType InviteType, answer bool) {
