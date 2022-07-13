@@ -9,10 +9,10 @@ func TestCanParticipateSuccess1(t *testing.T) {
 	timeSlotStart := time.Date(2009, 11, 17, 20, 30, 00, 651387237, time.UTC)
 	timeSlotEnd := time.Date(2009, 11, 17, 21, 00, 00, 651387237, time.UTC)
 
-	slot := TimeSlot{timeSlotStart, timeSlotEnd}
+	slot := TimeSlot{StartTime: timeSlotStart, EndTime: timeSlotEnd}
 	slots := []TimeSlot{slot}
 
-	attendant := EventAttendant{"", slots, EventRoleAttendant}
+	attendant := EventAttendant{UserId: "", PossibleTimes: slots, Role: EventRoleAttendant}
 	canParticipate := attendant.CanParticipate(slot)
 
 	if canParticipate {
@@ -28,11 +28,11 @@ func TestCanParticipateSuccess2(t *testing.T) {
 	timeSlot2Start := time.Date(2009, 11, 17, 21, 00, 00, 651387237, time.UTC)
 	timeSlot2End := time.Date(2009, 11, 17, 21, 30, 00, 651387237, time.UTC)
 
-	slot1 := TimeSlot{timeSlot1Start, timeSlot1End}
-	slot2 := TimeSlot{timeSlot2Start, timeSlot2End}
+	slot1 := TimeSlot{StartTime: timeSlot1Start, EndTime: timeSlot1End}
+	slot2 := TimeSlot{StartTime: timeSlot2Start, EndTime: timeSlot2End}
 	slots1 := []TimeSlot{slot1}
 
-	attendant := EventAttendant{"", slots1, EventRoleAttendant}
+	attendant := EventAttendant{UserId: "", PossibleTimes: slots1, Role: EventRoleAttendant}
 	canParticipate := attendant.CanParticipate(slot2)
 
 	if canParticipate {
@@ -48,12 +48,12 @@ func TestCanParticipateFail1(t *testing.T) {
 	timeSlot2Start := time.Date(2009, 11, 17, 21, 00, 00, 651387237, time.UTC)
 	timeSlot2End := time.Date(2009, 11, 17, 21, 30, 00, 651387237, time.UTC)
 
-	slot1 := TimeSlot{timeSlot1Start, timeSlot1End}
-	slot2 := TimeSlot{timeSlot2Start, timeSlot2End}
+	slot1 := TimeSlot{StartTime: timeSlot1Start, EndTime: timeSlot1End}
+	slot2 := TimeSlot{StartTime: timeSlot2Start, EndTime: timeSlot2End}
 
 	slots1 := []TimeSlot{slot1}
 
-	attendant := EventAttendant{"", slots1, EventRoleAttendant}
+	attendant := EventAttendant{UserId: "", PossibleTimes: slots1, Role: EventRoleAttendant}
 
 	canParticipate := attendant.CanParticipate(slot2)
 
@@ -71,12 +71,12 @@ func TestCanParticipateFail2(t *testing.T) {
 	timeSlot2Start := time.Date(2009, 11, 17, 21, 00, 00, 651387237, time.UTC)
 	timeSlot2End := time.Date(2009, 11, 17, 22, 30, 00, 651387237, time.UTC)
 
-	slot1 := TimeSlot{timeSlot1Start, timeSlot1End}
-	slot2 := TimeSlot{timeSlot2Start, timeSlot2End}
+	slot1 := TimeSlot{StartTime: timeSlot1Start, EndTime: timeSlot1End}
+	slot2 := TimeSlot{StartTime: timeSlot2Start, EndTime: timeSlot2End}
 
 	slots1 := []TimeSlot{slot1}
 
-	attendant := EventAttendant{"", slots1, EventRoleAttendant}
+	attendant := EventAttendant{UserId: "", PossibleTimes: slots1, Role: EventRoleAttendant}
 
 	canParticipate := attendant.CanParticipate(slot2)
 

@@ -61,6 +61,29 @@ type ComplexPlanner struct {
 
 func (planner *ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots []TimeSlot) TimeSlot {
 	var result TimeSlot
+	var maxParticipants float64 = 0
+
+	for _, timeSlot := range timeSlots {
+
+		var currentPossibleParticipants float64 = 0
+
+		for _, attendant := range attendants {
+			if attendant.CanParticipate(timeSlot) && !attendant.HasPlannedEventAtTime(timeSlot) {
+				var possibleEvents float64 = float64(attendant.GetAmountOfPotentialEventsAtTime(timeSlot))
+				if possibleEvents <= 0 {
+					possibleEvents = 1
+				}
+
+				currentPossibleParticipants += (1 / possibleEvents)
+			}
+		}
+
+		if currentPossibleParticipants > maxParticipants {
+			maxParticipants = currentPossibleParticipants
+			result = timeSlot
+		}
+	}
+
 	return result
 }
 

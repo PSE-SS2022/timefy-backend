@@ -18,3 +18,8 @@ func (timeSlot TimeSlot) EndToString() string {
 func (timeSlot TimeSlot) Equals(compare TimeSlot) bool {
 	return (timeSlot.StartTime.Equal(compare.StartTime)) && (timeSlot.EndTime.Equal(compare.EndTime))
 }
+
+func (timeSlot TimeSlot) collides(toCheckTimeSlot TimeSlot) bool {
+
+	return false
+}

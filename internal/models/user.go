@@ -61,11 +61,12 @@ func GetUserByID(id string) (User, bool) {
 	return user, true
 }
 
-func (user User) CalculateUID(lastName string) {
-
+// this should be calculated in userhandler on registration/first login
+func (user *User) SetUID(uid string) {
+	user.UID = uid
 }
 
-func (user User) SetFcmToken(fcmToken string) {
+func (user *User) SetFcmToken(fcmToken string) {
 
 }
 
@@ -95,6 +96,11 @@ func (user *User) Friendinvite(userId string, answer bool) {
 
 func (user *User) GroupInvite(groupId string, answer bool) {
 
+}
+
+func (user *User) GetScheduledEvents() []Event {
+	var result []Event
+	return result
 }
 
 type ScheduledEvent struct {

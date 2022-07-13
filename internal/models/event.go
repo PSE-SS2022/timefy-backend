@@ -26,11 +26,11 @@ type Event struct {
 }
 
 func (event Event) IsFull() bool {
-	return false
+	return len(event.Attendants) == event.MaxAmountOfAttendants
 }
 
 func (event Event) DeadlineArrived() bool {
-	return false
+	return time.Now().After(event.JoinDeadline)
 }
 
 type UserQuestionairInput map[int](map[int]bool)
@@ -103,6 +103,25 @@ func (attendant EventAttendant) CanParticipate(slot TimeSlot) bool {
 	}
 
 	return false
+}
+
+func (attendant EventAttendant) HasPlannedEventAtTime(slot TimeSlot) bool {
+
+	var user User = attendant.GetUser()
+	for _, event := range user.GetScheduledEvents() {
+
+		for _, timeSlot := range event.PossibleTimes {
+			if timeSlot.collides(slot) {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
+func (attendant EventAttendant) GetAmountOfPotentialEventsAtTime(slot TimeSlot) int {
+	return 0
 }
 
 func (attendant EventAttendant) GetUser() User {
