@@ -18,6 +18,7 @@ const (
 	EventCreationLimitation
 	UserProfilePictureSetLimitation
 	UserReportLimitation
+	LimitedOperationTypeMax
 )
 
 var LimitedOperationAmounts []int = []int{1, 1, 1, 5}
@@ -53,6 +54,20 @@ type User struct {
 	LimitedOperations  map[LimitedOperationType][]time.Time `bson:"LimitedOperations" json:"LimitedOperations"`
 	BlockedUsers       []string                             `bson:"BlockedUsers" json:"BlockedUsers"`
 	Invites            []Invite                             `bson:"Invites" json:"Invites"`
+}
+
+func NewUser(ID primitive.ObjectID, UID, FirstName, LastName, Email string, Roles map[string]string) *User {
+
+	user := User{ID: ID, UID: UID, FirstName: FirstName, LastName: LastName, Email: Email, Roles: Roles}
+	user.LimitedOperations = make(map[LimitedOperationType][]time.Time)
+
+	for x := 0; x < int(LimitedOperationTypeMax); x++ {
+		amount := user.GetAmount(LimitedOperationType(x))
+		var newArray []time.Time = make([]time.Time, amount)
+		user.LimitedOperations[LimitedOperationType(x)] = newArray
+	}
+
+	return &user
 }
 
 func GetUserByID(id string) (User, bool) {
