@@ -45,7 +45,7 @@ type MCAnswer struct {
 }
 
 func (answer *MCAnswer) AddUser(userId string) {
-
+	answer.SelectedUserIds = append(answer.SelectedUserIds, userId)
 }
 
 type MCQuestion struct {
@@ -156,5 +156,5 @@ type EventFilterCategory struct {
 }
 
 func (eventFilterCategory EventFilterCategory) IsValidEvent(event Event) bool {
-	return false
+	return eventFilterCategory.Category == event.Category
 }
