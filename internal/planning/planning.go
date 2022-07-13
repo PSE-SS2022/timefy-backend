@@ -69,7 +69,7 @@ func (planner *ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots [
 
 		for _, attendant := range attendants {
 			if attendant.CanParticipate(timeSlot) && !attendant.HasPlannedEventAtTime(timeSlot) {
-				var possibleEvents float64 = float64(attendant.GetAmountOfPotentialEventsAtTime(timeSlot))
+				var possibleEvents float64 = float64(planner.getAmountOfPotentialEventsAtTime(attendant, timeSlot))
 				if possibleEvents <= 0 {
 					possibleEvents = 1
 				}
@@ -89,6 +89,10 @@ func (planner *ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots [
 
 func (planner *ComplexPlanner) Notify(eventId string) {
 
+}
+
+func (planner *ComplexPlanner) getAmountOfPotentialEventsAtTime(attendant EventAttendant, timeSlot TimeSlot) int {
+	return 0
 }
 
 func (planner *ComplexPlanner) getRegisteredEventsOfAttendant(attendant EventAttendant) []Event {

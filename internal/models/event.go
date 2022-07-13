@@ -99,7 +99,6 @@ func (attendant EventAttendant) CanParticipate(slot TimeSlot) bool {
 		if startIsBefore && endIsAfter {
 			return true
 		}
-
 	}
 
 	return false
@@ -118,10 +117,6 @@ func (attendant EventAttendant) HasPlannedEventAtTime(slot TimeSlot) bool {
 	}
 
 	return false
-}
-
-func (attendant EventAttendant) GetAmountOfPotentialEventsAtTime(slot TimeSlot) int {
-	return 0
 }
 
 func (attendant EventAttendant) GetUser() User {
