@@ -20,6 +20,21 @@ func (timeSlot TimeSlot) Equals(compare TimeSlot) bool {
 }
 
 func (timeSlot TimeSlot) collides(toCheckTimeSlot TimeSlot) bool {
+	var earliestEnd time.Time
+	var SlotToCompare TimeSlot
 
-	return false
+	if timeSlot.StartTime.Before(toCheckTimeSlot.StartTime) {
+		earliestEnd = timeSlot.EndTime
+		SlotToCompare = toCheckTimeSlot
+	} else {
+		earliestEnd = toCheckTimeSlot.EndTime
+		SlotToCompare = timeSlot
+	}
+
+	// if first timeslots ends before other one starts they don't collide
+	if earliestEnd.Before(SlotToCompare.StartTime) || earliestEnd.Equal(SlotToCompare.StartTime) {
+		return false
+	}
+
+	return true
 }
