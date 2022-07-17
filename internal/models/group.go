@@ -8,7 +8,7 @@ type Group struct {
 	Events      string `bson:"Events" json:"Events"`
 }
 
-func (group Group) CalculateGID() {
+func (group *Group) SetGID() {
 
 }
 

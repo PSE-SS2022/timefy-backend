@@ -1,6 +1,7 @@
 package planning
 
 import (
+	"github.com/PSE-SS2022/timefy-backend/internal/database"
 	. "github.com/PSE-SS2022/timefy-backend/internal/models"
 )
 
@@ -68,7 +69,7 @@ func (planner *ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots [
 		var currentPossibleParticipants float64 = 0
 
 		for _, attendant := range attendants {
-			if attendant.CanParticipate(timeSlot) && !attendant.HasPlannedEventAtTime(timeSlot) {
+			if attendant.CanParticipate(timeSlot) && !attendantHasPlannedEventAtTime(attendant, timeSlot) {
 				var possibleEvents float64 = float64(planner.getAmountOfPotentialEventsAtTime(attendant, timeSlot))
 				if possibleEvents <= 0 {
 					possibleEvents = 1
@@ -106,4 +107,21 @@ func (planner *ComplexPlanner) getTimeSlotsForEvent(event Event) []TimeSlot {
 }
 
 func (planner *ComplexPlanner) fetchAvailableTimesForAttendant(attendant EventAttendant) {
+}
+
+func attendantHasPlannedEventAtTime(attendant EventAttendant, slot TimeSlot) bool {
+
+	user, result := database.UserRepositoryInstance.GetUserById(attendant.UserId)
+	if result {
+		for _, event := range user.GetScheduledEvents() {
+
+			for _, timeSlot := range event.PossibleTimes {
+				if timeSlot.Collides(slot) {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
 }

@@ -22,7 +22,7 @@ type Event struct {
 	Visibility            EventVisibility       `bson:"Visibility" json:"Visibility"`
 	JoinDeadline          time.Time             `bson:"JoinDeadline" json:"JoinDeadline"`
 	IsScheduled           bool                  `bson:"IsScheduled" json:"IsScheduled"`
-	EventDate             time.Time             `bson:"EventDate" json:"EventDate"`
+	TimeSlot              TimeSlot              `bson:"TimeSlot" json:"TimeSlot"`
 }
 
 func (event Event) IsFull() bool {
@@ -79,7 +79,7 @@ func (questionair MCQuestionair) GetUsersForAnswers(index int) []string {
 type EventRole int
 
 const (
-	EventRoleOwner = iota
+	EventRoleOwner EventRole = iota
 	EventRoleOrganizer
 	EventRoleHelper
 	EventRoleAttendant
@@ -104,24 +104,8 @@ func (attendant EventAttendant) CanParticipate(slot TimeSlot) bool {
 	return false
 }
 
-func (attendant EventAttendant) HasPlannedEventAtTime(slot TimeSlot) bool {
-
-	var user User = attendant.GetUser()
-	for _, event := range user.GetScheduledEvents() {
-
-		for _, timeSlot := range event.PossibleTimes {
-			if timeSlot.collides(slot) {
-				return true
-			}
-		}
-	}
-
-	return false
-}
-
-func (attendant EventAttendant) GetUser() User {
-	var result User
-	return result
+func (attendant EventAttendant) GetUserId() string {
+	return attendant.UserId
 }
 
 type EventCategory int
@@ -140,6 +124,8 @@ const (
 	EventVisibilityGroup
 	EventVisibilityFriendsOnly
 	EventVisibilityPrivate
+	EventVisibilityEating
+	EventVisibilitySocial
 )
 
 type EventFilter interface {

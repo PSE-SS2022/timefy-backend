@@ -1,15 +1,10 @@
 package models
 
 import (
-	"context"
 	"time"
 
-	"github.com/PSE-SS2022/timefy-backend/internal/repos"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
-
-const USER_REPO = "users"
 
 type LimitedOperationType int
 
@@ -68,19 +63,6 @@ func NewUser(ID primitive.ObjectID, UID, FirstName, LastName, Email string, Role
 	}
 
 	return &user
-}
-
-func GetUserByID(id string) (User, bool) {
-	var user User
-	usersCollection := repos.GetCollection((USER_REPO))
-	if usersCollection != nil {
-		return user, false
-	}
-	usersCollection.FindOne(context.TODO(), bson.M{"id": id}).Decode(&user)
-	if user.ID.IsZero() {
-		return user, false
-	}
-	return user, true
 }
 
 // this should be calculated in userhandler on registration/first login

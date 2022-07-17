@@ -86,3 +86,25 @@ func TestCanParticipateFail2(t *testing.T) {
 		t.Errorf("Participating test failed, got true but expected false")
 	}
 }
+
+func TestIsFull1(t *testing.T) {
+	attendants := []EventAttendant{EventAttendant{}, EventAttendant{}}
+	event := Event{Attendants: attendants, MaxAmountOfAttendants: 2}
+
+	isFull := event.IsFull()
+
+	if !isFull {
+		t.Errorf("Expected event to be full")
+	}
+}
+
+func TestIsFull2(t *testing.T) {
+	attendants := []EventAttendant{EventAttendant{}}
+	event := Event{Attendants: attendants, MaxAmountOfAttendants: 2}
+
+	isFull := event.IsFull()
+
+	if isFull {
+		t.Errorf("Expected event not to be full")
+	}
+}

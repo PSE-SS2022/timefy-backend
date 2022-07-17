@@ -19,7 +19,7 @@ func (timeSlot TimeSlot) Equals(compare TimeSlot) bool {
 	return (timeSlot.StartTime.Equal(compare.StartTime)) && (timeSlot.EndTime.Equal(compare.EndTime))
 }
 
-func (timeSlot TimeSlot) collides(toCheckTimeSlot TimeSlot) bool {
+func (timeSlot TimeSlot) Collides(toCheckTimeSlot TimeSlot) bool {
 	var earliestEnd time.Time
 	var SlotToCompare TimeSlot
 

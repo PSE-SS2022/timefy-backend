@@ -72,7 +72,7 @@ func TestCollides1(t *testing.T) {
 	slot1 := TimeSlot{start1, end1}
 	slot2 := TimeSlot{start2, end2}
 
-	collides := slot1.collides(slot2)
+	collides := slot1.Collides(slot2)
 
 	if collides {
 		t.Errorf("Didn't expect timeslots to collide")
@@ -88,7 +88,7 @@ func TestCollides2(t *testing.T) {
 	slot1 := TimeSlot{start1, end1}
 	slot2 := TimeSlot{start2, end2}
 
-	collides := slot1.collides(slot2)
+	collides := slot1.Collides(slot2)
 
 	if collides {
 		t.Errorf("Expected timeslots not to collide")
@@ -104,7 +104,7 @@ func TestCollides3(t *testing.T) {
 	slot1 := TimeSlot{start1, end1}
 	slot2 := TimeSlot{start2, end2}
 
-	collides := slot2.collides(slot1)
+	collides := slot2.Collides(slot1)
 
 	if !collides {
 		t.Errorf("Expected timeslots to collide")
@@ -117,7 +117,7 @@ func TestCollides4(t *testing.T) {
 
 	slot := TimeSlot{start, end}
 
-	collides := slot.collides(slot)
+	collides := slot.Collides(slot)
 
 	if !collides {
 		t.Errorf("Expected timeslots to collide")
