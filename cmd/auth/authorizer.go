@@ -10,7 +10,7 @@ import (
 
 	"github.com/casbin/casbin"
 
-	"github.com/PSE-SS2022/timefy-backend/internal/models"
+	"github.com/PSE-SS2022/timefy-backend/internal/database"
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
@@ -22,7 +22,7 @@ type Authorize struct {
 }
 
 func (a *Authorize) HasPermission(userID, action, asset string) bool {
-	user, ok := models.GetUserByID(userID)
+	user, ok := database.UserRepositoryInstance.GetUserById(userID)
 	if !ok {
 		return false
 	}
