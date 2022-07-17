@@ -69,8 +69,11 @@ func (planner *ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots [
 		var currentPossibleParticipants float64 = 0
 
 		for _, attendant := range attendants {
-			if attendant.CanParticipate(timeSlot) && !attendantHasPlannedEventAtTime(attendant, timeSlot) {
-				var possibleEvents float64 = float64(planner.getAmountOfPotentialEventsAtTime(attendant, timeSlot))
+			user, result := database.UserRepositoryInstance.GetUserById(attendant.GetUserId())
+
+			if attendant.CanParticipate(timeSlot) && result && !userHasPlannedEventAtTime(user, timeSlot) {
+				// get amount of possible timeslots from registrations that collide with given on
+				var possibleEvents float64 = float64(planner.getAmountOfPotentialEventsAtTime(user, timeSlot))
 				if possibleEvents <= 0 {
 					possibleEvents = 1
 				}
@@ -92,33 +95,42 @@ func (planner *ComplexPlanner) Notify(eventId string) {
 
 }
 
-func (planner *ComplexPlanner) getAmountOfPotentialEventsAtTime(attendant EventAttendant, timeSlot TimeSlot) int {
-	return 0
+func (planner *ComplexPlanner) getAmountOfPotentialEventsAtTime(user User, timeSlot TimeSlot) int {
+	var amountOfPotentialEvents int = 0
+
+	events := planner.getRegisteredEventsOfUser(user)
+
+	for _, event := range events {
+		// get Attendant for user
+		attendant := planner.getUserAttendantDataOfEvent(user, event)
+
+		for _, timeSlots := range attendant.PossibleTimes {
+			if timeSlots.Collides(timeSlot) {
+				amountOfPotentialEvents++
+			}
+		}
+	}
+
+	return amountOfPotentialEvents
 }
 
-func (planner *ComplexPlanner) getRegisteredEventsOfAttendant(attendant EventAttendant) []Event {
+func (planner *ComplexPlanner) getRegisteredEventsOfUser(user User) []Event {
 	var result []Event
 	return result
 }
 
-func (planner *ComplexPlanner) getTimeSlotsForEvent(event Event) []TimeSlot {
-	var result []TimeSlot
+func (planner *ComplexPlanner) getUserAttendantDataOfEvent(user User, event Event) EventAttendant {
+	var result EventAttendant
 	return result
 }
 
-func (planner *ComplexPlanner) fetchAvailableTimesForAttendant(attendant EventAttendant) {
-}
+func userHasPlannedEventAtTime(user User, slot TimeSlot) bool {
 
-func attendantHasPlannedEventAtTime(attendant EventAttendant, slot TimeSlot) bool {
+	for _, event := range user.GetScheduledEvents() {
 
-	user, result := database.UserRepositoryInstance.GetUserById(attendant.UserId)
-	if result {
-		for _, event := range user.GetScheduledEvents() {
-
-			for _, timeSlot := range event.PossibleTimes {
-				if timeSlot.Collides(slot) {
-					return true
-				}
+		for _, timeSlot := range event.PossibleTimes {
+			if timeSlot.Collides(slot) {
+				return true
 			}
 		}
 	}
