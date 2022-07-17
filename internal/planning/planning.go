@@ -104,6 +104,7 @@ func (planner *ComplexPlanner) getAmountOfPotentialEventsAtTime(user User, timeS
 		// get Attendant for user
 		attendant := planner.getUserAttendantDataOfEvent(user, event)
 
+		// if we have a timeslot collision we are less likely to attend
 		for _, timeSlots := range attendant.PossibleTimes {
 			if timeSlots.Collides(timeSlot) {
 				amountOfPotentialEvents++
@@ -115,13 +116,13 @@ func (planner *ComplexPlanner) getAmountOfPotentialEventsAtTime(user User, timeS
 }
 
 func (planner *ComplexPlanner) getRegisteredEventsOfUser(user User) []Event {
-	var result []Event
-	return result
+	events := database.EventRepositoryInstance.GetEventsOfUser(user)
+	return events
 }
 
 func (planner *ComplexPlanner) getUserAttendantDataOfEvent(user User, event Event) EventAttendant {
-	var result EventAttendant
-	return result
+	events := database.EventRepositoryInstance.GetAttendantData(user, event)
+	return events
 }
 
 func userHasPlannedEventAtTime(user User, slot TimeSlot) bool {
