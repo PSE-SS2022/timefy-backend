@@ -2,6 +2,7 @@ package planning
 
 import (
 	"github.com/PSE-SS2022/timefy-backend/internal/database"
+	"github.com/PSE-SS2022/timefy-backend/internal/models"
 	. "github.com/PSE-SS2022/timefy-backend/internal/models"
 )
 
@@ -121,15 +122,22 @@ func (planner *ComplexPlanner) getRegisteredEventsOfUser(user User) []Event {
 }
 
 func (planner *ComplexPlanner) getUserAttendantDataOfEvent(user User, event Event) EventAttendant {
-	events := database.EventRepositoryInstance.GetAttendantData(user, event)
-	return events
+	var attendant models.EventAttendant
+
+	for _, attendant := range event.GetAttendants() {
+		if attendant.GetUserId() == user.GetID() {
+			return attendant
+		}
+	}
+
+	return attendant
 }
 
 func userHasPlannedEventAtTime(user User, slot TimeSlot) bool {
 
 	for _, event := range user.GetScheduledEvents() {
 
-		for _, timeSlot := range event.PossibleTimes {
+		for _, timeSlot := range event.GetPossibleTimes() {
 			if timeSlot.Collides(slot) {
 				return true
 			}

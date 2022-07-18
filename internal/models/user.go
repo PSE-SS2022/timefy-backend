@@ -65,6 +65,10 @@ func NewUser(ID primitive.ObjectID, UID, FirstName, LastName, Email string, Role
 	return &user
 }
 
+func (user *User) GetID() string {
+	return user.ID.String()
+}
+
 // this should be calculated in userhandler on registration/first login
 func (user *User) SetUID(uid string) {
 	user.UID = uid

@@ -1,7 +1,11 @@
 package database
 
 import (
+	"context"
+	"log"
+
 	"github.com/PSE-SS2022/timefy-backend/internal/models"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 var EventRepositoryInstance EventRepository
@@ -18,15 +22,28 @@ func (eventRepository EventRepository) GetEventsOfUser(user models.User) []model
 	if eventCollection != nil {
 		return events
 	}
-	//eventCollection.Find(context.TODO(), bson.M{"id": id}).Decode(&user)
-	if user.ID.IsZero() {
-		return events
+
+	cur, err := eventCollection.Find(context.TODO(), bson.D{{}})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// iterate through all objects
+	for cur.Next(context.TODO()) {
+		var event models.Event
+		err := cur.Decode(&event)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// check if event contains user
+		for _, attendant := range event.GetAttendants() {
+			if attendant.GetUserId() == user.GetID() {
+				events = append(events, event)
+				break
+			}
+		}
 	}
 
 	return events
-}
-
-func (eventRepository EventRepository) GetAttendantData(user models.User, event models.Event) models.EventAttendant {
-	var result models.EventAttendant
-	return result
 }

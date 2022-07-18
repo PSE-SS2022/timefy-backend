@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"strconv"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -27,7 +28,8 @@ func newDatabaseMgr() databaseMgr {
 
 func (database *databaseMgr) initDB() error {
 	// Define Address of Database
-	const uri string = "mongodb://" + host + string(port)
+	var portString string = strconv.Itoa(port)
+	var uri string = "mongodb://" + host + portString
 	database.clientOptions = options.Client().ApplyURI(uri)
 	// Try to connect to Database, save error if one is thrown
 	client, err := mongo.Connect(context.TODO(), database.clientOptions)

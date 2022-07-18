@@ -25,6 +25,14 @@ type Event struct {
 	TimeSlot              TimeSlot              `bson:"TimeSlot" json:"TimeSlot"`
 }
 
+func (event Event) GetAttendants() []EventAttendant {
+	return event.Attendants
+}
+
+func (event Event) GetPossibleTimes() []TimeSlot {
+	return event.PossibleTimes
+}
+
 func (event Event) IsFull() bool {
 	return len(event.Attendants) == event.MaxAmountOfAttendants
 }
