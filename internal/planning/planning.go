@@ -1,26 +1,50 @@
 package planning
 
 import (
+	"time"
+
 	"github.com/PSE-SS2022/timefy-backend/internal/database"
 	"github.com/PSE-SS2022/timefy-backend/internal/models"
 	. "github.com/PSE-SS2022/timefy-backend/internal/models"
+	"github.com/jasonlvhit/gocron"
 )
 
-const INTERVAL_IN_MINUTES int = 10
+const INTERVAL_IN_MINUTES_SCHEDULE uint64 = 10
 
 type CronJob struct {
 }
 
 func (cronJob *CronJob) SetupCronJob() {
-
+	if cronJob != nil {
+		gocron.Every(INTERVAL_IN_MINUTES_SCHEDULE).Minutes().Do(cronJob.ScheduleDueEvents)
+	}
 }
 
 func (cronJob *CronJob) ScheduleDueEvents() {
-
+	for _, event := range database.EventRepositoryInstance.GetEvents() {
+		if !event.GetIsScheduled() && time.Now().After(event.GetDeadline()) {
+			planner := GetPlanner(event)
+			planner.Evaluate(event.GetAttendants(), event.GetPossibleTimes())
+		}
+	}
 }
 
 func (cronJob *CronJob) DeleteOccuredEvents() {
 
+}
+
+func GetPlanner(event Event) PlanningAlgorithm {
+	var planner PlanningAlgorithm
+
+	switch event.GetPlanningAlgorithmType() {
+	case PlanningAlgorithmTypeSimple:
+		return SimplePlanner{}
+	case PlanningAlgorithmTypeComplex:
+		return ComplexPlanner{}
+	default:
+	}
+
+	return planner
 }
 
 type PlanningAlgorithm interface {
@@ -31,7 +55,7 @@ type PlanningAlgorithm interface {
 type SimplePlanner struct {
 }
 
-func (planner *SimplePlanner) Evaluate(attendants []EventAttendant, timeSlots []TimeSlot) TimeSlot {
+func (planner SimplePlanner) Evaluate(attendants []EventAttendant, timeSlots []TimeSlot) TimeSlot {
 	var result TimeSlot
 	var maxParticipants int = 0
 
@@ -54,14 +78,14 @@ func (planner *SimplePlanner) Evaluate(attendants []EventAttendant, timeSlots []
 	return result
 }
 
-func (planner *SimplePlanner) Notify(eventId string) {
+func (planner SimplePlanner) Notify(eventId string) {
 
 }
 
 type ComplexPlanner struct {
 }
 
-func (planner *ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots []TimeSlot) TimeSlot {
+func (planner ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots []TimeSlot) TimeSlot {
 	var result TimeSlot
 	var maxParticipants float64 = 0
 
@@ -92,12 +116,12 @@ func (planner *ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots [
 	return result
 }
 
-func (planner *ComplexPlanner) Notify(eventId string) {
+func (planner ComplexPlanner) Notify(eventId string) {
 
 }
 
 // todo divide through amount of timeslots of event
-func (planner *ComplexPlanner) getAmountOfPotentialEventsAtTime(user User, timeSlot TimeSlot) int {
+func (planner ComplexPlanner) getAmountOfPotentialEventsAtTime(user User, timeSlot TimeSlot) int {
 	var amountOfPotentialEvents int = 0
 
 	events := planner.getRegisteredEventsOfUser(user)
@@ -117,12 +141,12 @@ func (planner *ComplexPlanner) getAmountOfPotentialEventsAtTime(user User, timeS
 	return amountOfPotentialEvents
 }
 
-func (planner *ComplexPlanner) getRegisteredEventsOfUser(user User) []Event {
+func (planner ComplexPlanner) getRegisteredEventsOfUser(user User) []Event {
 	events := database.EventRepositoryInstance.GetEventsOfUser(user)
 	return events
 }
 
-func (planner *ComplexPlanner) getUserAttendantDataOfEvent(user User, event Event) EventAttendant {
+func (planner ComplexPlanner) getUserAttendantDataOfEvent(user User, event Event) EventAttendant {
 	var attendant models.EventAttendant
 
 	for _, attendant := range event.GetAttendants() {
@@ -134,8 +158,7 @@ func (planner *ComplexPlanner) getUserAttendantDataOfEvent(user User, event Even
 	return attendant
 }
 
-func (planner *ComplexPlanner) userHasPlannedEventAtTime(user User, slot TimeSlot) bool {
-
+func (planner ComplexPlanner) userHasPlannedEventAtTime(user User, slot TimeSlot) bool {
 	for _, scheduled := range user.GetScheduledEvents() {
 
 		event, result := database.EventRepositoryInstance.GetEventById(scheduled.GetEventId())

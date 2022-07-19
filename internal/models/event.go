@@ -25,6 +25,18 @@ type Event struct {
 	TimeSlot              TimeSlot              `bson:"TimeSlot" json:"TimeSlot"`
 }
 
+func (event Event) GetIsScheduled() bool {
+	return event.IsScheduled
+}
+
+func (event Event) GetDeadline() time.Time {
+	return event.JoinDeadline
+}
+
+func (event Event) GetPlanningAlgorithmType() PlanningAlgorithmType {
+	return event.Algorithm
+}
+
 func (event Event) GetAttendants() []EventAttendant {
 	return event.Attendants
 }

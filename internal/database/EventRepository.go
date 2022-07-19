@@ -15,7 +15,33 @@ const EVENT_REPO = "events"
 type EventRepository struct {
 }
 
-func (EventRepository EventRepository) GetEventById(id string) (models.Event, bool) {
+func (eventRepository EventRepository) GetEvents() []models.Event {
+	var events []models.Event
+	eventCollection := databaseMgrInstance.getCollection((EVENT_REPO))
+	if eventCollection != nil {
+		return events
+	}
+
+	cur, err := eventCollection.Find(context.TODO(), bson.D{{}})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// iterate through all objects
+	for cur.Next(context.TODO()) {
+		var event models.Event
+		err := cur.Decode(&event)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		events = append(events, event)
+	}
+
+	return events
+}
+
+func (eventRepository EventRepository) GetEventById(id string) (models.Event, bool) {
 	var event models.Event
 	eventCollection := databaseMgrInstance.getCollection((EVENT_REPO))
 
