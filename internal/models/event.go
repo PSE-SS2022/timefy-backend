@@ -33,6 +33,16 @@ func (event Event) GetPossibleTimes() []TimeSlot {
 	return event.PossibleTimes
 }
 
+func (event Event) ContainsUser(userId string) bool {
+	for _, attendant := range event.Attendants {
+		if attendant.GetUserId() == userId {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (event Event) IsFull() bool {
 	return len(event.Attendants) == event.MaxAmountOfAttendants
 }
@@ -123,6 +133,8 @@ const (
 	EventCategoryFestival
 	EventCategoryStudy
 	EventCategoryReading
+	EventCategoryEating
+	EventCategorySocial
 )
 
 type EventVisibility int
@@ -132,8 +144,6 @@ const (
 	EventVisibilityGroup
 	EventVisibilityFriendsOnly
 	EventVisibilityPrivate
-	EventVisibilityEating
-	EventVisibilitySocial
 )
 
 type EventFilter interface {
