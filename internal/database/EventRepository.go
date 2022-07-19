@@ -15,6 +15,10 @@ const EVENT_REPO = "events"
 type EventRepository struct {
 }
 
+func (eventRepository EventRepository) UpdateEvent(event models.Event) {
+	// todo: Update event in database
+}
+
 func (eventRepository EventRepository) GetEvents() []models.Event {
 	var events []models.Event
 	eventCollection := databaseMgrInstance.getCollection((EVENT_REPO))

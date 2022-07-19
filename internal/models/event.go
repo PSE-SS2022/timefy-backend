@@ -25,8 +25,16 @@ type Event struct {
 	TimeSlot              TimeSlot              `bson:"TimeSlot" json:"TimeSlot"`
 }
 
+func (event *Event) SetPlannedTimeSlot(timeSlot TimeSlot) {
+	event.TimeSlot = timeSlot
+}
+
 func (event Event) GetIsScheduled() bool {
 	return event.IsScheduled
+}
+
+func (event *Event) SetIsScheduled(isScheduled bool) {
+	event.IsScheduled = isScheduled
 }
 
 func (event Event) GetDeadline() time.Time {

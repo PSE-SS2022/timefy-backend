@@ -23,8 +23,15 @@ func (cronJob *CronJob) SetupCronJob() {
 func (cronJob *CronJob) ScheduleDueEvents() {
 	for _, event := range database.EventRepositoryInstance.GetEvents() {
 		if !event.GetIsScheduled() && time.Now().After(event.GetDeadline()) {
+			// get planner based on type used for event creation
 			planner := GetPlanner(event)
-			planner.Evaluate(event.GetAttendants(), event.GetPossibleTimes())
+			timeSlot := planner.Evaluate(event.GetAttendants(), event.GetPossibleTimes())
+
+			// set results in event
+			event.SetPlannedTimeSlot(timeSlot)
+			event.SetIsScheduled(true)
+			// update event in database
+			database.EventRepositoryInstance.UpdateEvent(event)
 		}
 	}
 }
