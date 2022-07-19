@@ -72,7 +72,7 @@ func (planner *ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots [
 		for _, attendant := range attendants {
 			user, result := database.UserRepositoryInstance.GetUserById(attendant.GetUserId())
 
-			if attendant.CanParticipate(timeSlot) && result && !userHasPlannedEventAtTime(user, timeSlot) {
+			if attendant.CanParticipate(timeSlot) && result && !planner.userHasPlannedEventAtTime(user, timeSlot) {
 				// get amount of possible timeslots from registrations that collide with given on
 				var possibleEvents float64 = float64(planner.getAmountOfPotentialEventsAtTime(user, timeSlot))
 				if possibleEvents <= 0 {
@@ -96,6 +96,7 @@ func (planner *ComplexPlanner) Notify(eventId string) {
 
 }
 
+// todo divide through amount of timeslots of event
 func (planner *ComplexPlanner) getAmountOfPotentialEventsAtTime(user User, timeSlot TimeSlot) int {
 	var amountOfPotentialEvents int = 0
 
@@ -133,9 +134,15 @@ func (planner *ComplexPlanner) getUserAttendantDataOfEvent(user User, event Even
 	return attendant
 }
 
-func userHasPlannedEventAtTime(user User, slot TimeSlot) bool {
+func (planner *ComplexPlanner) userHasPlannedEventAtTime(user User, slot TimeSlot) bool {
 
-	for _, event := range user.GetScheduledEvents() {
+	for _, scheduled := range user.GetScheduledEvents() {
+
+		event, result := database.EventRepositoryInstance.GetEventById(scheduled.GetEventId())
+
+		if result {
+			continue
+		}
 
 		for _, timeSlot := range event.GetPossibleTimes() {
 			if timeSlot.Collides(slot) {

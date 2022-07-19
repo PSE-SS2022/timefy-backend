@@ -10,9 +10,27 @@ import (
 
 var EventRepositoryInstance EventRepository
 
-const EVENT_REPO = "users"
+const EVENT_REPO = "events"
 
 type EventRepository struct {
+}
+
+func (EventRepository EventRepository) GetEventById(id string) (models.Event, bool) {
+	var event models.Event
+	eventCollection := databaseMgrInstance.getCollection((EVENT_REPO))
+
+	if eventCollection != nil {
+		return event, false
+	}
+
+	eventResult := eventCollection.FindOne(context.TODO(), bson.M{"id": id})
+	eventResult.Decode(&event)
+
+	if event.ID.IsZero() {
+		return event, false
+	}
+
+	return event, true
 }
 
 func (eventRepository EventRepository) GetEventsOfUser(user models.User) []models.Event {

@@ -61,3 +61,6 @@ func TestSimpleEvaluate2(t *testing.T) {
 		t.Errorf("Got wrong timeslot as result")
 	}
 }
+
+/*func TestUserHasPlannedEventAtTime(t *testing.T) {
+}*/

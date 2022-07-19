@@ -127,14 +127,17 @@ func (user *User) GroupInvite(groupId string, answer bool) {
 
 }
 
-func (user *User) GetScheduledEvents() []Event {
-	var result []Event
-	return result
+func (user *User) GetScheduledEvents() []ScheduledEvent {
+	return user.ScheduledEvents
 }
 
 type ScheduledEvent struct {
 	EventId string `bson:"EventId" json:"EventId"`
 	Synced  bool   `bson:"Synced" json:"Synced"`
+}
+
+func (scheduledEvent ScheduledEvent) GetEventId() string {
+	return scheduledEvent.EventId
 }
 
 type FriendRelation struct {
