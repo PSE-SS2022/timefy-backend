@@ -92,26 +92,23 @@ type MCQuestion struct {
 }
 
 func (answer MCQuestion) GetAnswers() map[int]MCAnswer {
-	var result map[int]MCAnswer
-	return result
+	return answer.Answers
 }
 
-func (answer MCQuestion) GetUsersForAnswer(index int) string {
-	return ""
+func (answer MCQuestion) GetUsersForAnswer(index int) []string {
+	return answer.Answers[index].SelectedUserIds
 }
 
 type MCQuestionair struct {
-	Question map[int]MCQuestion `bson:"Question" json:"Question"`
+	Questions map[int]MCQuestion `bson:"Question" json:"Question"`
 }
 
 func (questionair MCQuestionair) GetQuestions() map[int]MCQuestion {
-	var result map[int]MCQuestion
-	return result
+	return questionair.Questions
 }
 
-func (questionair MCQuestionair) GetUsersForAnswers(index int) []string {
-	var result []string
-	return result
+func (questionair MCQuestionair) GetUsersForAnswers(questionIndex int, answerIndex int) []string {
+	return questionair.Questions[questionIndex].GetUsersForAnswer(answerIndex)
 }
 
 type EventRole int
