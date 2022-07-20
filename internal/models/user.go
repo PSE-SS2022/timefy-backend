@@ -8,7 +8,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-const USER_REPO = "users"
+const (
+	USER_REPO = "users"
+)
 
 type User struct {
 	ID             primitive.ObjectID `bson:"_id,omitempty"`
@@ -27,6 +29,19 @@ func GetUserByID(id string) (User, bool) {
 		return user, false
 	}
 	usersCollection.FindOne(context.TODO(), bson.M{"id": id}).Decode(&user)
+	if user.ID.IsZero() {
+		return user, false
+	}
+	return user, true
+}
+
+func GetUserByMail(id string) (User, bool) {
+	var user User
+	usersCollection := repos.GetCollection((USER_REPO))
+	if usersCollection != nil {
+		return user, false
+	}
+	usersCollection.FindOne(context.TODO(), bson.M{"email": id}).Decode(&user)
 	if user.ID.IsZero() {
 		return user, false
 	}

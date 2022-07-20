@@ -23,3 +23,7 @@ func IsEmpty(data string) bool {
 func JoinPaths(paths ...string) string {
 	return filepath.Join(paths...)
 }
+
+func GetTemplate(path string) string {
+	return filepath.Join("web", "templates", path)
+}

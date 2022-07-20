@@ -1,0 +1,71 @@
+{{template "base" .}}
+
+{{define "header"}}
+{{end}}
+
+{{define "scripts"}}
+  <script>
+    $(document).ready(function () {
+      if (window.location.href.indexOf("?wrong") > -1) {
+        document.getElementById('wrong').style.display = '';
+      } else {
+        document.getElementById('wrong').style.display = 'none';
+      }
+      if (window.location.href.indexOf("?format") > -1) {
+        document.getElementById('format').style.display = '';
+      } else {
+        document.getElementById('format').style.display = 'none';
+      }
+      if (window.location.href.indexOf("?empty") > -1) {
+        document.getElementById('empty').style.display = '';
+      } else {
+        document.getElementById('empty').style.display = 'none';
+      }
+    });
+  </script>
+{{end}}
+
+
+{{define "title"}}
+  Registrieren
+{{end}}
+
+{{define "main"}}
+
+<div id="wrong" class="alert alert-danger" role="alert" style="display: none;">
+    Es existiert bereits ein Konto mit der eingegebenen Nummer!
+  </div>
+  <div id="format" class="alert alert-danger" role="alert" style="display: none;">
+    Es trat ein Feher mit Ihren Eingaben auf, versuchen Sie es erneut!
+  </div>
+  <div id="empty" class="alert alert-danger" role="alert" style="display: none;">
+    Felder dürfen nicht leer sein!
+  </div>
+   <form method="POST">
+            <div class="form-group row">
+              <label for="firstName" class="col-sm-3 col-form-label">First Name</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="firstName" name="firstName" required="required">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="lastName" class="col-sm-3 col-form-label">Last Name</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="lastName" name="lastName" required="required">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="email" class="col-sm-3 col-form-label">Email</label>
+              <div class="col-sm-9">
+                <input type="email" class="form-control" id="email" name="email" required="required">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="password" class="col-sm-3 col-form-label">Password</label>
+              <div class="col-sm-9">
+                <input type="password" class="form-control" id="password" name="password" required="required">
+              </div>
+            </div>
+            <input class="btn btn-outline-dark" id="submit" type="submit" value="Submit">
+          </form>
+  {{end}}
