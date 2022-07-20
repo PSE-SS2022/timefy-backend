@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/PSE-SS2022/timefy-backend/internal/database"
-	"github.com/PSE-SS2022/timefy-backend/internal/models"
 	. "github.com/PSE-SS2022/timefy-backend/internal/models"
 	"github.com/jasonlvhit/gocron"
 )
@@ -104,7 +103,7 @@ func (planner ComplexPlanner) Evaluate(attendants []EventAttendant, timeSlots []
 			user, result := database.UserRepositoryInstance.GetUserById(attendant.GetUserId())
 
 			if attendant.CanParticipate(timeSlot) && result && !planner.userHasPlannedEventAtTime(user, timeSlot) {
-				// get amount of possible timeslots from registrations that collide with given on
+				// get amount of possible timeslots from registrations that collide with given one
 				var possibleEvents float64 = float64(planner.getAmountOfPotentialEventsAtTime(user, timeSlot))
 				if possibleEvents <= 0 {
 					possibleEvents = 1
@@ -154,7 +153,7 @@ func (planner ComplexPlanner) getRegisteredEventsOfUser(user User) []Event {
 }
 
 func (planner ComplexPlanner) getUserAttendantDataOfEvent(user User, event Event) EventAttendant {
-	var attendant models.EventAttendant
+	var attendant EventAttendant
 
 	for _, attendant := range event.GetAttendants() {
 		if attendant.GetUserId() == user.GetID() {

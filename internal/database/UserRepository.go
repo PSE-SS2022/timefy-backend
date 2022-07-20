@@ -10,13 +10,14 @@ import (
 var UserRepositoryInstance userRepository
 
 const USER_REPO = "users"
+const USER_RELATION_REPO = "user_relations"
 
 type userRepository struct {
 }
 
 func (userRepository userRepository) GetUserById(id string) (models.User, bool) {
 	var user models.User
-	usersCollection := databaseMgrInstance.getCollection((USER_REPO))
+	usersCollection := databaseMgrInstance.GetCollection((USER_REPO))
 
 	if usersCollection != nil {
 		return user, false

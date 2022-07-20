@@ -21,7 +21,7 @@ func (eventRepository EventRepository) UpdateEvent(event models.Event) {
 
 func (eventRepository EventRepository) GetEvents() []models.Event {
 	var events []models.Event
-	eventCollection := databaseMgrInstance.getCollection((EVENT_REPO))
+	eventCollection := databaseMgrInstance.GetCollection((EVENT_REPO))
 	if eventCollection != nil {
 		return events
 	}
@@ -47,7 +47,7 @@ func (eventRepository EventRepository) GetEvents() []models.Event {
 
 func (eventRepository EventRepository) GetEventById(id string) (models.Event, bool) {
 	var event models.Event
-	eventCollection := databaseMgrInstance.getCollection((EVENT_REPO))
+	eventCollection := databaseMgrInstance.GetCollection((EVENT_REPO))
 
 	if eventCollection != nil {
 		return event, false
@@ -66,7 +66,7 @@ func (eventRepository EventRepository) GetEventById(id string) (models.Event, bo
 func (eventRepository EventRepository) GetEventsOfUser(user models.User) []models.Event {
 	var events []models.Event
 
-	eventCollection := databaseMgrInstance.getCollection((EVENT_REPO))
+	eventCollection := databaseMgrInstance.GetCollection((EVENT_REPO))
 	if eventCollection != nil {
 		return events
 	}

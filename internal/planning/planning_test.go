@@ -1,11 +1,24 @@
 package planning
 
 import (
+	"os"
 	"testing"
 	"time"
 
+	"github.com/PSE-SS2022/timefy-backend/internal/database"
 	. "github.com/PSE-SS2022/timefy-backend/internal/models"
 )
+
+func TestMain(m *testing.M) {
+	// before the test
+	database.SetupDatabase(database.DatabaseTypeTestingInMemory)
+
+	exitVal := m.Run()
+
+	// after the test
+
+	os.Exit(exitVal)
+}
 
 func TestSimpleEvaluate1(t *testing.T) {
 	planner := SimplePlanner{}

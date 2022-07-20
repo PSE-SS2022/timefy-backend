@@ -140,16 +140,17 @@ func (scheduledEvent ScheduledEvent) GetEventId() string {
 	return scheduledEvent.EventId
 }
 
-type FriendRelation struct {
-	Id      string `bson:"Id" json:"Id"`
-	UserAId string `bson:"UserAId" json:"UserAId"`
-	UserBId string `bson:"UserBId" json:"UserBId"`
+type UserRelation struct {
+	Id           string           `bson:"Id" json:"Id"`
+	RelationType UserRelationType `bson:"RelationType" json:"RelationType"`
+	UserAId      string           `bson:"UserAId" json:"UserAId"`
+	UserBId      string           `bson:"UserBId" json:"UserBId"`
 }
 
-type UserRelation int
+type UserRelationType int
 
 const (
-	UserRelationFriends UserRelation = iota
-	UserRelationBlocked
-	UserRelationNotFriends
+	UserRelationTypeFriends UserRelationType = iota
+	UserRelationTypeBlocked
+	UserRelationTypeNotFriends
 )
