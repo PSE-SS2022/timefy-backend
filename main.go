@@ -15,6 +15,7 @@ func main() {
 	if err := repos.InitDB(); err != nil {
 		panic("Error initializing the Database, error:" + err.Error())
 	}
+	auth.SetupFirebase()
 	auth.GetEnforcer() // init enforcer
 	router := mux.NewRouter()
 

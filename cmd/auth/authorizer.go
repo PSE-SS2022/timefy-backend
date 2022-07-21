@@ -49,7 +49,7 @@ func LoginHandler(response http.ResponseWriter, request *http.Request) {
 	} else {
 		request.ParseForm()
 		if len(request.PostForm) > 0 {
-			if IsAuthenticatedWithEmailAndPassword(request) {
+			if AuthenticateWithEmailAndPassword(request) {
 				sessionToken := uuid.NewString()
 				expiresAt := time.Now().Add(24 * time.Hour)
 
@@ -75,7 +75,7 @@ func LoginHandler(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func IsAuthenticatedWithEmailAndPassword(request *http.Request) bool {
+func AuthenticateWithEmailAndPassword(request *http.Request) bool {
 	email := request.FormValue("email")
 	password := request.FormValue("password")
 	if len(email) != 0 && len(password) != 0 {
@@ -138,6 +138,7 @@ func IsAllowed(request *http.Request) bool {
 	if ok, _ := IsAuthenticatedWithBearer(request); !ok {
 		return false
 	}
+	print("im here")
 	return authorizer.HasPermission(getUserIdByToken(getTokenFromCookie(request)), request.Method, request.URL.Path)
 }
 
@@ -182,11 +183,11 @@ func IsAuthenticatedWithBearer(request *http.Request) (bool, error) {
 }
 
 func authenticate(idToken string) bool {
-	_, err := authClient.VerifyIDToken(context.Background(), idToken)
+	_, err := authClient.VerifyIDToken(context.TODO(), idToken)
 	return err == nil
 }
 
-func SetupFirebase() *auth.Client {
+func SetupFirebase() {
 	opt := option.WithCredentialsFile(os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
@@ -194,12 +195,11 @@ func SetupFirebase() *auth.Client {
 	}
 
 	//Firebase Auth
-	auth, err := app.Auth(context.Background())
+	auth, err := app.Auth(context.TODO())
 	if err != nil {
 		panic(fmt.Errorf("firebase load error"))
 	}
-
-	return auth
+	authClient = auth
 }
 
 func GetEnforcer() *casbin.Enforcer {
