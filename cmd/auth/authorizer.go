@@ -138,7 +138,6 @@ func IsAllowed(request *http.Request) bool {
 	if ok, _ := IsAuthenticatedWithBearer(request); !ok {
 		return false
 	}
-	print("im here")
 	return authorizer.HasPermission(getUserIdByToken(getTokenFromCookie(request)), request.Method, request.URL.Path)
 }
 
