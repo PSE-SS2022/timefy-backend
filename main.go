@@ -30,7 +30,8 @@ func main() {
 	router.HandleFunc("/register", handlers.RegisterPageHandler).Methods("GET")
 	router.HandleFunc("/register", handlers.RegisterAdmin).Methods("POST")
 
-	router.HandleFunc("/signup", handlers.SignUpUser).Methods("POST")
+	router.HandleFunc("/user/fcmToken", handlers.SendFCMToken).Methods("POST")
+	router.HandleFunc("/user/signup", handlers.SignUpUser).Methods("POST")
 
 	log.Println("All handlers set and ready to listen")
 	server.Start()
