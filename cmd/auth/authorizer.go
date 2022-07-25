@@ -12,6 +12,7 @@ import (
 	"github.com/casbin/casbin"
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/PSE-SS2022/timefy-backend/internal/models"
@@ -37,13 +38,12 @@ var authClient *auth.Client
 var sessions = map[string]session{}
 
 type session struct {
-	username string
-	expiry   time.Time
+	email  string
+	expiry time.Time
 }
 
 func LoginHandler(response http.ResponseWriter, request *http.Request) {
 	if IsAuthenticatedWithSession(request) {
-		print("hi im here")
 		response.Write([]byte(`<script>window.location.href = "/";</script>`))
 		return
 	} else {
@@ -55,8 +55,8 @@ func LoginHandler(response http.ResponseWriter, request *http.Request) {
 
 				// Set the token in the session map, along with the user whom it represents
 				sessions[sessionToken] = session{
-					username: request.FormValue("email"),
-					expiry:   expiresAt,
+					email:  request.FormValue("email"),
+					expiry: expiresAt,
 				}
 				SetCookie("session_token", sessionToken, expiresAt, response)
 				response.Header().Set("Content-Type", "text/html")
@@ -109,6 +109,19 @@ func IsAuthenticatedWithSession(request *http.Request) bool {
 	return true
 }
 
+func GetMailFromSession(request *http.Request) string {
+	token := GetCookie("session_token", request)
+	if token == "" {
+		return ""
+	}
+	session, ok := sessions[token]
+	if !ok {
+		return ""
+	}
+	println(session.email)
+	return session.email
+}
+
 func Logout(response http.ResponseWriter, request *http.Request) {
 	token := GetCookie("session_token", request)
 	if token == "" {
@@ -134,38 +147,60 @@ func GetToken(request *http.Request) string {
 	return token
 }
 
-func IsAllowed(request *http.Request) bool {
-	if ok, _ := IsAuthenticatedWithBearer(request); !ok {
-		return false
-	}
-	return authorizer.HasPermission(getUserIdByToken(getTokenFromCookie(request)), request.Method, request.URL.Path)
-}
-
-func (a *Authorize) HasPermission(userID, action, asset string) bool {
-	user, ok := models.GetUserByID(userID)
-	if !ok {
-		return false
-	}
-
-	for _, role := range user.Roles {
-		if a.Enforcer.Enforce(role, asset, action) {
-			return true
+func IsAllowed(request *http.Request, isAdmin bool) bool {
+	authenticated := false
+	authorized := false
+	if isAdmin {
+		authenticated = IsAuthenticatedWithSession(request)
+		if !authenticated {
+			return false
 		}
+		admin, exists := models.GetAdminByMail(GetMailFromSession(request))
+		if !exists {
+			return false
+		}
+		authorized = admin.Role == "admin" || admin.Role == "mod"
+	} else {
+		authenticated, _ = IsAuthenticatedWithBearer(request)
+		if !authenticated {
+			return false
+		}
+		authorized = authorizer.HasPermission(getUserIdByToken(getTokenFromCookie(request)), request.Method, request.URL.Path, false)
 	}
-
-	return false
+	return authenticated && authorized
 }
 
-func getUserIdByToken(token string) string {
+func (a *Authorize) HasPermission(id primitive.ObjectID, action, asset string, isAdmin bool) bool {
+	if isAdmin {
+		admin, ok := models.GetAdminById(id)
+		if !ok {
+			return false
+		}
+		return a.Enforcer.Enforce(admin.Role, asset, action)
+	} else {
+		user, ok := models.GetUserByID(id)
+		if !ok {
+			return false
+		}
+		for _, role := range user.Roles {
+			if a.Enforcer.Enforce(role, asset, action) {
+				return true
+			}
+		}
+		return false
+	}
+}
+
+func getUserIdByToken(token string) primitive.ObjectID {
 	fireBaseUser, err := authClient.GetUser(context.Background(), token)
 	if err != nil {
-		return ""
+		return primitive.NilObjectID
 	}
 	user, ok := models.GetUserByMail(fireBaseUser.Email)
 	if !ok {
-		return ""
+		return primitive.NilObjectID
 	}
-	return user.ID.String()
+	return user.ID
 }
 
 // To check if the user is authenticated
