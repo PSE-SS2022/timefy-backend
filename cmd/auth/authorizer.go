@@ -207,10 +207,12 @@ func getUserIdByToken(token string) primitive.ObjectID {
 func IsAuthenticatedWithBearer(request *http.Request) (bool, error) {
 	idToken := GetToken(request)
 	if idToken == "" {
+		println("no token")
 		return false, errors.New("token not set or invalid")
 	}
 
 	if !authenticate(idToken) {
+		println("not valid")
 		return false, errors.New("invalid token")
 	}
 	return true, nil
@@ -218,6 +220,9 @@ func IsAuthenticatedWithBearer(request *http.Request) (bool, error) {
 
 func authenticate(idToken string) bool {
 	_, err := authClient.VerifyIDToken(context.TODO(), idToken)
+	if err != nil {
+		println(err.Error())
+	}
 	return err == nil
 }
 
