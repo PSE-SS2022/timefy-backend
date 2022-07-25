@@ -22,7 +22,7 @@ type User struct {
 	AmountWarnings int                `bson:"AmountWarnings" json:"AmountWarnings"`
 }
 
-func GetUserByID(id string) (User, bool) {
+func GetUserByID(id primitive.ObjectID) (User, bool) {
 	var user User
 	usersCollection := repos.GetCollection((USER_REPO))
 	if usersCollection != nil {
@@ -35,13 +35,13 @@ func GetUserByID(id string) (User, bool) {
 	return user, true
 }
 
-func GetUserByMail(id string) (User, bool) {
+func GetUserByMail(mail string) (User, bool) {
 	var user User
 	usersCollection := repos.GetCollection((USER_REPO))
 	if usersCollection != nil {
 		return user, false
 	}
-	usersCollection.FindOne(context.TODO(), bson.M{"email": id}).Decode(&user)
+	usersCollection.FindOne(context.TODO(), bson.M{"Email": mail}).Decode(&user)
 	if user.ID.IsZero() {
 		return user, false
 	}
