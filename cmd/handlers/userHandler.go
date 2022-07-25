@@ -7,7 +7,7 @@ import (
 )
 
 func SignUpUser(response http.ResponseWriter, request *http.Request) {
-	if auth.IsAllowed(request) {
+	if auth.IsAllowed(request, false) {
 		// Do something
 		response.WriteHeader(http.StatusOK)
 		return
@@ -16,7 +16,7 @@ func SignUpUser(response http.ResponseWriter, request *http.Request) {
 }
 
 func SendFCMToken(response http.ResponseWriter, request *http.Request) {
-	if auth.IsAllowed(request) {
+	if auth.IsAllowed(request, false) {
 		// Do something
 		response.WriteHeader(http.StatusOK)
 		return
